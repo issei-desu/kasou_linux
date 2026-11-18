@@ -1,0 +1,308 @@
+/* ==========================================================================
+   KasouLinux - Native DOM Full-Screen Terminal UI (Text-Only, Instant)
+   ========================================================================== */
+
+:root {
+  --bg-main: #0c0f14;
+  --bg-bar: #181c24;
+  --border-bar: #2b313e;
+  --text-main: #e5e7eb;
+  --text-muted: #9ca3af;
+  --accent: #22c55e;
+  --font-ui: "Noto Sans JP", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "Courier New", monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-family: var(--font-ui);
+  font-size: 14px;
+}
+
+/* ==========================================================================
+   Top Bar
+   ========================================================================== */
+#term-header {
+  height: 36px;
+  background: var(--bg-bar);
+  border-bottom: 1px solid var(--border-bar);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  user-select: none;
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-title {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13.5px;
+  color: #f3f4f6;
+}
+
+.vm-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: #11141a;
+  border: 1px solid #2b313e;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: #d1d5db;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+}
+
+.bar-btn {
+  height: 26px;
+  padding: 0 10px;
+  background: #252b38;
+  color: #e5e7eb;
+  border: 1px solid #3b4252;
+  border-radius: 3px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.bar-btn:hover {
+  background: #343d4f;
+}
+
+.bar-btn.primary {
+  background: #15803d;
+  border-color: #22c55e;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.bar-btn.primary:hover {
+  background: #16a34a;
+}
+
+/* ==========================================================================
+   Main Native Terminal Screen
+   ========================================================================== */
+#term-main {
+  position: relative;
+  width: 100vw;
+  height: calc(100vh - 78px);
+  background: var(--bg-main);
+  overflow: hidden;
+}
+
+#term-screen {
+  width: 100%;
+  height: 100%;
+  padding: 12px 14px;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-main);
+  cursor: text;
+}
+
+#term-log {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.term-line {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* Inline Active Prompt Row inside the black terminal */
+#term-prompt-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 2px;
+}
+
+#term-prompt-label {
+  white-space: pre;
+  flex-shrink: 0;
+}
+
+#term-inline-input {
+  flex: 1;
+  background: transparent;
+  color: #ffffff;
+  border: none;
+  outline: none;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.5;
+  caret-color: #22c55e;
+}
+
+/* ANSI Color Spans */
+.ansi-green { color: #4ade80; font-weight: 700; }
+.ansi-blue { color: #60a5fa; font-weight: 700; }
+.ansi-cyan { color: #22d3ee; font-weight: 700; }
+.ansi-yellow { color: #facc15; font-weight: 700; }
+.ansi-red { color: #f87171; font-weight: 700; }
+.ansi-gray { color: #9ca3af; }
+
+/* ==========================================================================
+   Bottom Command Input Bar
+   ========================================================================== */
+#cmd-bar {
+  height: 42px;
+  background: #141820;
+  border-top: 1px solid var(--border-bar);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+}
+
+.cmd-bar-prompt {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: #4ade80;
+  white-space: nowrap;
+}
+
+#cmd-input {
+  flex: 1;
+  height: 28px;
+  background: #0b0e13;
+  color: #f3f4f6;
+  border: 1px solid #3b4252;
+  border-radius: 3px;
+  padding: 0 10px;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  outline: none;
+}
+
+#cmd-input:focus {
+  border-color: #22c55e;
+}
+
+/* ==========================================================================
+   In-Terminal Editor Overlay (vi / vim / nano / edit)
+   ========================================================================== */
+#term-editor-overlay {
+  position: absolute;
+  inset: 0;
+  background: #0f1218;
+  display: flex;
+  flex-direction: column;
+  z-index: 500;
+}
+
+#term-editor-overlay.hidden {
+  display: none;
+}
+
+.nano-header {
+  height: 30px;
+  background: #d1d5db;
+  color: #111827;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+}
+
+#nano-textarea {
+  flex: 1;
+  width: 100%;
+  background: #0f1218;
+  color: #f3f4f6;
+  border: none;
+  outline: none;
+  resize: none;
+  padding: 12px 14px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.5;
+  tab-size: 4;
+}
+
+.nano-footer {
+  height: 36px;
+  background: #181c24;
+  border-top: 1px solid #2b313e;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.nano-shortcuts {
+  display: flex;
+  gap: 8px;
+}
+
+.nano-btn {
+  padding: 4px 10px;
+  background: #2b3343;
+  color: #f9fafb;
+  border: 1px solid #4b5563;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.nano-btn:hover {
+  background: #3b465c;
+}
+
+.nano-btn.primary {
+  background: #15803d;
+  border-color: #22c55e;
+}
+
+#toast-container {
+  position: fixed;
+  bottom: 52px;
+  right: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 9999;
+}
+
+.toast {
+  background: #1f2937;
+  color: #f9fafb;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #4b5563;
+  font-size: 12px;
+}

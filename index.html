@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KasouLinux Terminal</title>
+  <link rel="stylesheet" href="css/desktop.css?v=5" />
+</head>
+<body>
+  <!-- Top Terminal Bar (Text Only) -->
+  <header id="term-header">
+    <div class="header-left">
+      <span class="brand-title">KasouLinux Terminal</span>
+      <div class="vm-status" title="Linux カーネル状態">
+        <span id="vm-status-dot" class="status-dot"></span>
+        <span id="vm-status-text">Linux 6.8 Ready</span>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <button id="btn-top-upload" class="bar-btn" title="PCから/mntへファイルを追加">ファイル読込</button>
+      <input id="file-upload-input" type="file" multiple style="display: none;" />
+      <button id="btn-top-save" class="bar-btn" title="ブラウザに状態を保存">環境を保存</button>
+      <button id="btn-top-reset" class="bar-btn" title="初期状態にリセット">初期化</button>
+      <button class="bar-btn" onclick="KasouUI.rebootVM()" title="カーネルを再起動">再起動</button>
+    </div>
+  </header>
+
+  <!-- Main Native Full-Screen Terminal Container -->
+  <main id="term-main">
+    <div id="term-screen">
+      <div id="term-log"></div>
+      <div id="term-prompt-row">
+        <span id="term-prompt-label"><span class="ansi-green">user@kasoulinux</span>:<span class="ansi-blue">~</span>$ </span>
+        <input
+          id="term-inline-input"
+          type="text"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+        />
+      </div>
+    </div>
+
+    <!-- In-Terminal Editor (Opened when user types vi / vim / nano / edit <file>) -->
+    <div id="term-editor-overlay" class="hidden">
+      <div class="nano-header">
+        <span>GNU nano / vi 互換エディタ</span>
+        <span id="nano-filepath">/mnt/hello.py</span>
+        <span>UTF-8</span>
+      </div>
+      <textarea id="nano-textarea" spellcheck="false"></textarea>
+      <div class="nano-footer">
+        <div class="nano-shortcuts">
+          <button id="btn-nano-save" class="nano-btn primary">^S 保存 (Ctrl+S)</button>
+          <button id="btn-nano-run" class="nano-btn">^R 保存して実行 (Ctrl+R)</button>
+          <button id="btn-nano-close" class="nano-btn">^X 終了してターミナルへ戻る (Esc)</button>
+        </div>
+        <span id="nano-status">Ctrl+S: 保存 | Esc: 終了</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Command Input Bar -->
+  <footer id="cmd-bar">
+    <span class="cmd-bar-prompt">コマンド入力:</span>
+    <input
+      id="cmd-input"
+      type="text"
+      autocomplete="off"
+      spellcheck="false"
+      placeholder="ここにコマンドを入力して Enter または右の「実行」をクリック (例: ls -la / python3 hello.py)"
+    />
+    <button id="cmd-send-btn" class="bar-btn primary">実行 (Enter)</button>
+  </footer>
+
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="assets/v86/libv86.js?v=7"></script>
+  <script src="js/vfs.js?v=7"></script>
+  <script src="js/runtime.js?v=7"></script>
+  <script src="js/vm.js?v=7"></script>
+  <script src="js/desktop.js?v=7"></script>
+</body>
+</html>
